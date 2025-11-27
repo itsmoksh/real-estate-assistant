@@ -8,6 +8,7 @@ from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from langchain_core.prompts import PromptTemplate
 from uuid import uuid4
 from dotenv import load_dotenv
+from spacy.training import validate_examples
 
 load_dotenv()
 
@@ -39,7 +40,6 @@ def initialize():
 
 def process_urls(urls):
     initialize()
-    vector_store.reset_collection()
     yield "Loading data from url"
     loader = WebBaseLoader(urls)
     data= loader.load()
@@ -53,8 +53,16 @@ def process_urls(urls):
     docs = splitter.split_documents(data)
 
     yield "Chunks created, storing in a vector store.."
-    uuids = [str (uuid4()) for _ in range(len(docs))]
-    vector_store.add_documents(docs,ids = uuids)
+
+    stored_sources = [doc['source'] for doc in vector_store.get()['metadatas']]
+    updated_docs = []
+    for doc in docs:
+        if doc.metadata['source'] not in stored_sources:
+            updated_docs.append(doc)
+    if updated_docs:
+        uuids = [str (uuid4()) for _ in range(len(updated_docs))]
+        vector_store.add_documents(updated_docs,ids = uuids)
+
 
 def generate(query):
     if not vector_store:
@@ -73,9 +81,7 @@ def generate(query):
     return sol.content,sources
 
 if __name__ == "__main__":
-    urls = ["https://www.ecatering.irctc.co.in/tnc"]
-    process_urls(urls)
-    query = "How to cancel the opted meal after booking ticket"
-    generate(query)
+    pass
+
 
 
