@@ -1,5 +1,5 @@
 #Importing necessary libs
-print("Importing Necessary modules")
+
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
@@ -23,11 +23,9 @@ vector_store = None
 def initialize():
     global llm,vector_store
     if llm is None:
-        print("Initializing LLM!!")
         llm = ChatGroq(model='llama-3.3-70b-versatile',temperature=0.7,max_tokens=700)
 
     if vector_store is None:
-        print("Creating a Vector store!!")
         ef = HuggingFaceEmbeddings(
             model_name=EMBEDDING_MODEL,
             model_kwargs={"trust_remote_code": True}
@@ -42,11 +40,11 @@ def initialize():
 def process_urls(urls):
     initialize()
     vector_store.reset_collection()
-    print("Loading data")
+    yield "Loading data from url"
     loader = WebBaseLoader(urls)
     data= loader.load()
 
-    print("Data loaded, Creating chunks")
+    yield "Data loaded, Creating chunks"
     splitter = RecursiveCharacterTextSplitter(
         chunk_size= CHUNK_SIZE,
         separators= ["\n\n","\n","."," "],
@@ -54,26 +52,30 @@ def process_urls(urls):
     )
     docs = splitter.split_documents(data)
 
-    print("Chunks created, storing in a vector store..")
+    yield "Chunks created, storing in a vector store.."
     uuids = [str (uuid4()) for _ in range(len(docs))]
     vector_store.add_documents(docs,ids = uuids)
 
 def generate(query):
+    if not vector_store:
+        raise RuntimeError("Vector store not initialized")
     results = vector_store.similarity_search(
         query,
         k=2,
     )
+    sources = [result.metadata['source'] for result in results]
     pt = PromptTemplate.from_template('''Here is the retrieved context(chunks): {chunks} )
     Query: {query}
     Answer clearly using the above context,Do not generate preamble ''')
 
     chain = pt | llm
     sol = chain.invoke({'chunks':results,'query':query})
-    print(sol.content)
+    return sol.content,sources
 
 if __name__ == "__main__":
     urls = ["https://www.ecatering.irctc.co.in/tnc"]
     process_urls(urls)
     query = "How to cancel the opted meal after booking ticket"
     generate(query)
+
 
