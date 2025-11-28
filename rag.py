@@ -8,7 +8,6 @@ from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from langchain_core.prompts import PromptTemplate
 from uuid import uuid4
 from dotenv import load_dotenv
-from spacy.training import validate_examples
 
 load_dotenv()
 

@@ -22,19 +22,42 @@ if process_urls_button:
             status.update(label = "Chunks stored, now you can ask questions",expanded = False)
 
 prompt = st.chat_input("Ask your Question")
+
+if 'message' not in st.session_state:
+    st.session_state['message'] = []
+
+for message in st.session_state['message']:
+    if message['role'] == 'User':
+        with st.chat_message(name = 'User'):
+            st.caption("Query")
+            st.markdown(message['query'])
+
+    else:
+        with st.chat_message(name = 'Assistant'):
+            if 'result' in message:
+                st.caption("Solution")
+                st.markdown(message['result'])
+            if 'source' in message:
+                st.caption("Sources")
+                st.markdown(message['source'])
+
 if prompt:
     try:
         solution, sources = generate(prompt)
-        with st.chat_message(name = "Assistant",avatar=None):
-            st.subheader("Question")
-            st.write(prompt)
-            st.subheader("Answer:")
-            st.write(solution)
+        with st.chat_message(name = "User"):
+            st.caption("Query")
+            st.markdown(prompt)
+        st.session_state.message.append({'role':"User", 'query': prompt})
+        with st.chat_message(name = 'Assistant'):
+            st.caption("Solution")
+            st.markdown(solution)
             if sources:
-                st.subheader("Source:")
+                st.caption("Source")
                 unique_source = set(sources)
                 for source in unique_source:
-                    st.write(source)
+                    st.markdown(source)
+        st.session_state.message.append({'role': "Assistant", 'result': solution})
+        st.session_state.message.append({'role': "Assistant", 'source': source})
 
     except RuntimeError as e:
         st.error("You must process the url first")
