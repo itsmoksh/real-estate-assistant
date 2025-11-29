@@ -1,5 +1,5 @@
 import streamlit as st
-from rag import process_urls,generate,reset_
+from rag import process_urls,generate,reset_vector_store
 st.title("Universal Research Assistant")
 
 if "initialized" not in st.session_state:
