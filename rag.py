@@ -64,6 +64,10 @@ def process_urls(urls):
 def generate(query):
     if not vector_store:
         raise RuntimeError("Vector store not initialized")
+
+    if vector_store._collection.count() == 0:
+        raise RuntimeError("No documents found")
+
     results = vector_store.similarity_search(
         query,
         k=2,
