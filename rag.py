@@ -34,7 +34,6 @@ def initialize():
             persist_directory= './resources/vectorstore',
             embedding_function=ef,
         )
-    else:
         vector_store.reset_collection()
 
 
