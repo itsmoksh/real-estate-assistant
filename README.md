@@ -50,4 +50,5 @@ Here's the next question, asked from the both about the model capabilities and t
 **Try it out**: [Streamlit App](https://moksh-research-assistant.streamlit.app/)
 
 **Moksh Jain**
+
 [LinkedIn](https://www.linkedin.com/in/itsmoksh/) • [GitHub](https://github.com/itsmoksh)
