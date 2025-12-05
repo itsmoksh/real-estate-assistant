@@ -1,16 +1,16 @@
 # Universal Research Assistant
 
-An assistant where you can extract relevant information just by dropping a URL of it. 
-User can drop URL's and ask questions to receive relevant insights from that doc. 
+An assistant where you can extract relevant information just by dropping a URL into it. 
+The user can drop URLs and ask questions to receive relevant insights from that doc. 
 
 ---
 ## Features
--  Drop and process the Url to fetch article content.
+-  Drop and process the URL to fetch article content.
 - The content is fetched using Web Base Loader powered by Langchain.
-- The extracted content is divided into chunks using Recursive text splitter.
-- Construct a vector store to store embeddings of this chunks into ChromaDB to enable swift retrieval of relevant content.
-- Queries are created using Langchain Prompt template and provides flexibility to user and their queries.
-- Interacts with the LLM(llama 3 via Groq) by inputting queries to receive answers with source url.
+- The extracted content is divided into chunks using the Recursive text splitter.
+- Construct a vector store to store embeddings of these chunks into ChromaDB to enable swift retrieval of relevant content.
+- Queries are created using the Langchain Prompt template and provide flexibility to the user and their queries.
+- Interacts with the LLM(llama 3 via Groq) by inputting queries to receive answers with the source URL.
 
 ---
 ## Architecture of Research Assistant
@@ -36,15 +36,15 @@ User can drop URL's and ask questions to receive relevant insights from that doc
 ```
 ---
 ## Streamlit UI
-Here's the screenshot of how Research Assistant Chat-bot works. The article used in this demo 
-is from "The Hindu", and it's about the Google new Gen-AI model.
+Here's the screenshot of how the Research Assistant Chatbot works. The article used in this demo 
+It's from "The Hindu", and it's about Google's new Gen-AI model.
 
 ![Question1](assets/sc1.png)
-The Url is processed at first, converts the article into document and chunked it. These chunks are stored in the Chroma 
+The URL is processed first, converts the article into a document and chunks it. These chunks are stored in the Chroma. 
 Database in the form of embeddings. Then, it's ready to give the answers.
 
 ![Question2](assets/sc2.png)
-Here's the next question, asked from the both about the model capabilities and the purpose of launching the model.
+Here's the next question, asked by the bot, about the model capabilities and the purpose of launching the model.
 
 ---
 **Try it out**: [Streamlit App](https://moksh-research-assistant.streamlit.app/)
