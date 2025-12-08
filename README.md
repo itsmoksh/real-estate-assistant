@@ -66,7 +66,7 @@ Here's the next question, asked by the bot, about the model capabilities and the
 
 ---
 **Try it out**:
-**[Open Streamlit App](https://moksh-research-assistant.streamlit.app/)**
+**[Open Streamlit App](https://itsmoksh-research-assistant.streamlit.app/)**
 
 **Moksh Jain**
 
